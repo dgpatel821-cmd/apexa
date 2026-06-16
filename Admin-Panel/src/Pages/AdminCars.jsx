@@ -98,6 +98,8 @@ const handleAddCar = async (e) => {
 
   if (editingCar.imageFile) {
     formData.append("image", editingCar.imageFile);
+  } else if (editingCar.image === "") {
+    formData.append("image", "");
   }
 
   try {
@@ -163,11 +165,19 @@ const handleAddCar = async (e) => {
           >
             {/* IMAGE SECTION */}
             <div className="relative h-52 overflow-hidden">
-              <img
-                src={`${API_BASE}${car.image}`}
-                alt={car.name}
-                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+              {car.image ? (
+                <img
+                  src={`${API_BASE}${car.image}`}
+                  alt={car.name}
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"; }}
+                />
+              ) : (
+                <div className="h-full w-full bg-white/5 flex flex-col items-center justify-center gap-2 text-gray-500">
+                  <ImagePlus size={36} className="text-gray-600" />
+                  <span className="text-sm">No Image Uploaded</span>
+                </div>
+              )}
 
               {/* CATEGORY BADGE */}
               <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs flex items-center gap-1 border border-white/10">
@@ -339,29 +349,107 @@ const handleAddCar = async (e) => {
                   />
                 </div>
 
-                {/* IMAGE BUTTON */}
-                <label className="flex items-center justify-center gap-2 border border-dashed border-white/20 rounded-lg p-4 cursor-pointer hover:bg-white/5 transition">
-                  <ImagePlus size={18} />
-                  {editingCar?.imageFile?.name ||
-                    form.imageFile?.name ||
-                    "Upload Car Image"}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) =>
-                      editingCar
-                        ? setEditingCar({
-                          ...editingCar,
-                          imageFile: e.target.files[0],
-                        })
-                        : setForm({
-                          ...form,
-                          imageFile: e.target.files[0],
-                        })
-                    }
-                  />
-                </label>
+                {/* IMAGE UPLOAD / PREVIEW SECTION */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-sm font-semibold text-gray-400">Car Image</span>
+                  
+                  {((editingCar && editingCar.imageFile) || (!editingCar && form.imageFile)) ? (
+                    /* If a new file is chosen */
+                    <div className="relative rounded-lg overflow-hidden border border-white/10 h-32 bg-white/5 flex items-center justify-between p-3">
+                      <img
+                        src={URL.createObjectURL(editingCar ? editingCar.imageFile : form.imageFile)}
+                        alt="Preview"
+                        className="h-full w-24 object-cover rounded"
+                      />
+                      <div className="flex-1 min-w-0 px-3">
+                        <p className="text-sm text-gray-300 truncate">
+                          {(editingCar ? editingCar.imageFile : form.imageFile).name}
+                        </p>
+                        <p className="text-xs text-yellow-400">New Image Selected</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (editingCar) {
+                            setEditingCar({ ...editingCar, imageFile: null });
+                          } else {
+                            setForm({ ...form, imageFile: null });
+                          }
+                        }}
+                        className="p-2 hover:bg-white/10 text-red-500 rounded-full transition cursor-pointer"
+                        title="Remove selected image"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  ) : (editingCar && editingCar.image) ? (
+                    /* If editing a car that has an existing image in DB */
+                    <div className="relative rounded-lg overflow-hidden border border-white/10 h-32 bg-white/5 flex items-center justify-between p-3">
+                      <img
+                        src={`${API_BASE}${editingCar.image}`}
+                        alt="Current"
+                        className="h-full w-24 object-cover rounded"
+                        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=100&fit=crop"; }}
+                      />
+                      <div className="flex-1 min-w-0 px-3">
+                        <p className="text-sm text-gray-300 truncate">
+                          {editingCar.image.split('/').pop()}
+                        </p>
+                        <p className="text-xs text-gray-500">Current Image</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <label className="p-2 hover:bg-white/10 text-orange-400 rounded-full transition cursor-pointer" title="Change image">
+                          <ImagePlus size={18} />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            onChange={(e) =>
+                              setEditingCar({
+                                ...editingCar,
+                                imageFile: e.target.files[0],
+                              })
+                            }
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this car's image?")) {
+                              setEditingCar({ ...editingCar, image: "" });
+                            }
+                          }}
+                          className="p-2 hover:bg-white/10 text-red-500 rounded-full transition cursor-pointer"
+                          title="Delete current image"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Default: Show upload button */
+                    <label className="flex items-center justify-center gap-2 border border-dashed border-white/20 rounded-lg p-4 cursor-pointer hover:bg-white/5 transition">
+                      <ImagePlus size={18} />
+                      Upload Car Image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) =>
+                          editingCar
+                            ? setEditingCar({
+                              ...editingCar,
+                              imageFile: e.target.files[0],
+                            })
+                            : setForm({
+                              ...form,
+                              imageFile: e.target.files[0],
+                            })
+                        }
+                      />
+                    </label>
+                  )}
+                </div>
 
                 <button
                   type={editingCar ? "button" : "submit"}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { IndianRupee, Car, ArrowRight } from "lucide-react";
+import { IndianRupee, Car, ArrowRight, Image } from "lucide-react";
 
 export default function Cars() {
   const [cars, setCars] = useState([]);
@@ -93,13 +93,21 @@ return (
      
 
         {/* Image - zoom only on image hover */}
-        <div className="overflow-hidden h-44">
-          <div className="absolute inset-0  z-10 h-44" />
-          <img
-            src={`https://apexaadmin.online${car.image}`}
-            alt={car.name}
-            className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-          />
+        <div className="overflow-hidden h-44 relative bg-white/5">
+          <div className="absolute inset-0 z-10 h-44 pointer-events-none" />
+          {car.image ? (
+            <img
+              src={`https://apexaadmin.online${car.image}`}
+              alt={car.name}
+              className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+              onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"; }}
+            />
+          ) : (
+            <div className="h-full w-full flex flex-col items-center justify-center gap-2 text-gray-500">
+              <Image size={36} className="text-gray-600" />
+              <span className="text-sm">No Image</span>
+            </div>
+          )}
         </div>
 
         {/* Content */}
