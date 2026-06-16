@@ -168,7 +168,7 @@ export default function Enquiry() {
             {car?.image && (
               <div className="mt-5 rounded-2xl overflow-hidden h-36">
                 <img
-                  src={car.image}
+                  src={`https://apexaadmin.online${car.image}`}
                   alt={car.name}
                   className="w-full h-full object-cover"
                 />
