@@ -55,7 +55,28 @@ router.post("/", protect, (req, res) => {
     }
   });
 });
-router.put("/:id", protect, upload.single("image"), updateCar);
+router.put("/:id", protect, (req, res, next) => {
+  upload.single("image")(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({
+          success: false,
+          message: "Image must be less than 10MB",
+        });
+      }
+      return res.status(400).json({
+        success: false,
+        message: err.message,
+      });
+    } else if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message,
+      });
+    }
+    next();
+  });
+}, updateCar);
 router.delete("/:id", protect, deleteCar);
 
 /* PUBLIC ROUTE */
