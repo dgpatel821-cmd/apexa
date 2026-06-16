@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import { motion } from "framer-motion";
+import { Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function AdminContacts() {
   const [contacts, setContacts] = useState([]);
@@ -16,6 +18,17 @@ export default function AdminContacts() {
       setContacts(res.data);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteContact = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this enquiry?")) return;
+    try {
+      const res = await axios.delete(`/contact/${id}`);
+      toast.success(res.data.message || "Enquiry deleted successfully");
+      fetchContacts();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error deleting enquiry");
     }
   };
 
@@ -146,6 +159,13 @@ export default function AdminContacts() {
                   <span className="text-[10px] text-gray-500 bg-white/[0.04] border border-white/[0.06] px-3 py-1 rounded-full">
                     {new Date(c.createdAt).toLocaleString()}
                   </span>
+                  <button
+                    onClick={() => deleteContact(c._id)}
+                    className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/30 rounded-lg transition-all cursor-pointer flex items-center justify-center shrink-0"
+                    title="Delete Enquiry"
+                  >
+                    <Trash2 size={13} />
+                  </button>
                 </div>
               </div>
 
