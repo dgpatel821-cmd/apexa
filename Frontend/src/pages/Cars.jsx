@@ -14,7 +14,7 @@ export default function Cars() {
 
   const fetchCars = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/cars");
+      const res = await axios.get("http://apexadmin.online/api/cars");
 
       if (Array.isArray(res.data)) {
         setCars(res.data);
@@ -96,7 +96,7 @@ return (
         <div className="overflow-hidden h-44">
           <div className="absolute inset-0  z-10 h-44" />
           <img
-            src={`http://localhost:5000${car.image}`}
+            src={`http://apexadmin.online${car.image}`}
             alt={car.name}
             className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
           />

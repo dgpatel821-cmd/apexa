@@ -102,7 +102,7 @@ export default function Enquiry() {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/booking", {
+      await axios.post("http://apexadmin.online/api/booking", {
         ...form,
         carId:   car._id,
         carName: car.name,
@@ -168,7 +168,7 @@ export default function Enquiry() {
             {car?.image && (
               <div className="mt-5 rounded-2xl overflow-hidden h-36">
                 <img
-                  src={`http://localhost:5000${car.image}`}
+                  src={`http://apexadmin.online${car.image}`}
                   alt={car.name}
                   className="w-full h-full object-cover"
                 />

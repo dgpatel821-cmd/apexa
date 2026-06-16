@@ -28,7 +28,7 @@ export default function AdminCars() {
     imageFile: null,
   });
 
-  const API_BASE = "http://localhost:5000";
+  const API_BASE = "http://apexadmin.online";
 
   const fetchCars = async () => {
     const res = await axios.get("/cars", {
