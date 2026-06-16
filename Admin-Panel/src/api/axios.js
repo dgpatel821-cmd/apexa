@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://apexadmin.online/api",
+  baseURL: "https://apexaadmin.online/api",
 });
 
 // attach token automatically

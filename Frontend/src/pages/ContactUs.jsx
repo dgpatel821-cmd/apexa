@@ -116,7 +116,7 @@ export default function ContactUs() {
     }
 
     try {
-      await axios.post("http://apexadmin.online/api/contact", form);
+      await axios.post("/api/contact", form);
 
       setSubmitted(true);
       setForm({ name: "", phone: "", from: "", tour: "", message: "" });

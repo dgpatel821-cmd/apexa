@@ -28,7 +28,7 @@ export default function AdminCars() {
     imageFile: null,
   });
 
-  const API_BASE = "http://apexadmin.online";
+  const API_BASE = "https://apexatoursandtravels.com";
 
   const fetchCars = async () => {
     const res = await axios.get("/cars", {
