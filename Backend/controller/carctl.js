@@ -53,7 +53,7 @@ exports.updateCar = async (req, res) => {
     };
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.image = `/api/uploads/${req.file.filename}`;
     }
 
     const car = await Car.findByIdAndUpdate(
@@ -86,7 +86,8 @@ exports.deleteCar = async (req, res) => {
 
     // Delete image file if exists
     if (car.image) {
-      const imagePath = path.join(__dirname, "..", car.image);
+      const filename = path.basename(car.image);
+      const imagePath = path.join(__dirname, "..", "uploads", filename);
 
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);

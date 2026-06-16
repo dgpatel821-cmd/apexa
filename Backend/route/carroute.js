@@ -38,7 +38,7 @@ router.post("/", protect, (req, res) => {
         seats,
         price,
         image: req.file
-          ? `/uploads/${req.file.filename}`
+          ? `/api/uploads/${req.file.filename}`
           : "",
       });
 
